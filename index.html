@@ -19,7 +19,8 @@
         .question-text { font-size: 1.2rem; font-weight: bold; color: #2c3e50; margin-bottom: 10px; text-align: left; direction: ltr; padding-left: 35px; }
         .translation-text { background: #f8f9fa; border-right: 4px solid var(--primary); padding: 10px 15px; margin-bottom: 15px; color: #576574; font-size: 0.95rem; text-align: right; }
         .options-list { display: flex; flex-direction: column; gap: 8px; }
-        .option-btn { background: var(--white); border: 1px solid #e0e6ed; padding: 12px; border-radius: 10px; cursor: pointer; text-align: left; direction: ltr; font-size: 1rem; color: #34495e; }
+        .option-btn { background: var(--white); border: 1px solid #e0e6ed; padding: 12px; border-radius: 10px; cursor: pointer; text-align: left; direction: ltr; font-size: 1rem; color: #34495e; transition: 0.3s; }
+        .option-btn:hover { background-color: #f1f1f1; }
         .correct-opt { background-color: #d4edda !important; border-color: #28a745 !important; color: #155724 !important; }
         .wrong-opt { background-color: #f8d7da !important; border-color: #dc3545 !important; color: #721c24 !important; }
         .explanation-box { margin-top: 12px; padding: 12px; border-radius: 10px; background: #fff9db; border: 1px solid #ffec99; display: none; text-align: right; }
@@ -29,7 +30,7 @@
 
     <div class="top-banner">
         <h1>بنك أسئلة مادة التواصل</h1>
-        <p>Communication Skills Bank</p>
+        <p>Communication Skills Full Bank (200 Questions)</p>
     </div>
 
     <div class="stats-grid">
@@ -38,23 +39,208 @@
     </div>
 
     <div class="search-container">
-        <input type="text" id="searchInput" placeholder="ابحث عن سؤال..." onkeyup="searchQuestions()">
+        <input type="text" id="searchInput" placeholder="ابحث عن كلمة في السؤال أو الترجمة..." onkeyup="searchQuestions()">
     </div>
 
     <div id="quiz-container" style="width: 100%; display: flex; flex-direction: column; align-items: center;"></div>
 
 <script>
 const questions = [
-    // عينة من الأسئلة - تم دمج الـ 200 سؤال هنا
-    { q: "As regards communication, barriers of messages include which of the following?", ar: "عوائق الرسائل في التواصل تشمل:", o: ["Easy messages", "Relevant messages", "Unclear messages", "Complete messages"], c: 2, ex: "الرسائل غير الواضحة تمنع وصول المعنى بشكل سليم." },
-    { q: "Which of the following is the definition of motivation?", ar: "ما هو تعريف التحفيز؟", o: ["Internal force to act", "External force", "Both 1 and 2", "None"], c: 0, ex: "التحفيز قوة داخلية تحرك الإنسان للقيام بفعل ما." },
-    // ... أضف هنا باقي الأسئلة الـ 200 بنفس التنسيق ...
+    // --- MULTIPLE CHOICE QUESTIONS (MCQs) ---
+    { q: "As regards communication, barriers of messages include which of the following?", ar: "عوائق الرسائل في التواصل تشمل:", o: ["Easy messages", "Relevant messages", "Unclear messages", "Complete messages"], c: 2, ex: "الرسائل غير الواضحة (Unclear) تشتت المتلقي وتمنع فهم المحتوى." },
+    { q: "Which of the following is the definition of motivation?", ar: "ما هو تعريف التحفيز؟", o: ["Internal force to act", "External force", "Both 1 and 2", "None"], c: 0, ex: "التحفيز هو المحرك الداخلي الذي يوجه سلوك الفرد." },
+    { q: "As regards the role of the teacher, which of the following is not correct?", ar: "أي مما يلي ليس من الأدوار الأكاديمية للمعلم؟", o: ["Planner", "Clarifier", "Stimulator", "Volunteer"], c: 3, ex: "المعلم مخطط وموضح ومحفز، لكن التطوع ليس دوره الأساسي." },
+    { q: "Group approach method of education includes which of the following?", ar: "طريقة تعليم المجموعات تشمل:", o: ["Television", "Home visit", "Lecture", "Internet"], c: 2, ex: "المحاضرات (Lectures) هي الوسيلة الأساسية لتعليم المجموعات." },
+    { q: "As regards importance of motivation which of the following is not correct?", ar: "بخصوص أهمية التحفيز، أي مما يلي غير صحيح؟", o: ["Activate behavior", "Give direction", "Increase productivity", "Passive participation"], c: 3, ex: "التحفيز يهدف للمشاركة النشطة وليس السلبية." },
+    { q: "Which is correct for essentials of communication?", ar: "أي مما يلي من أساسيات التواصل الجيد؟", o: ["Do not react instantly in anger", "Go to the conclusion", "Interrupt the speaker", "Use difficult medical terminology"], c: 0, ex: "الهدوء وعدم الانفعال يضمن استمرار عملية التواصل." },
+    { q: "Which of the following is considered correct for verbal communication?", ar: "أي مما يلي يخص التواصل اللفظي؟", o: ["Need words to express emotions", "Active listening", "Direct questioning", "All of the above"], c: 3, ex: "يشمل الكلمات، الاستماع، والأسئلة المباشرة." },
+    { q: "Which of the following is the characteristic of nonverbal communication?", ar: "من خصائص التواصل غير اللفظي:", o: ["Easy communication", "More reliable than verbal", "Do not need observation", "Cannot be used with deaf"], c: 1, ex: "لغة الجسد غالباً ما تكون أصدق من الكلام." },
+    { q: "Which is correct for an effective verbal communicator?", ar: "المتواصل اللفظي الفعال يتميز بـ:", o: ["Encourages empathically", "Depend on eye contact", "Depend on facial expression", "Depend on body language"], c: 0, ex: "التشجيع والتعاطف أساس التواصل اللفظي." },
+    { q: "Which of the following are levels of communication?", ar: "مستويات التواصل تشمل:", o: ["Downwards", "Upwards", "Horizontal", "All the above"], c: 3, ex: "يشمل التواصل في جميع الاتجاهات الإدارية." },
+    { q: "Risk factors that cause health education problem include:", ar: "عوائق التثقيف الصحي تشمل:", o: ["Good staff training", "Interacting with clients", "Good interest", "Lack staff training"], c: 3, ex: "نقص تدريب الموظفين يعيق وصول المعلومة الصحية." },
+    { q: "Group approach includes which of the following?", ar: "طريقة المجموعات تشمل:", o: ["Internet", "Lectures, workshops and conference", "Home visit", "Television"], c: 1, ex: "ورش العمل والمحاضرات من وسائل المجموعات." },
+    { q: "Advantages of group teaching include:", ar: "مميزات تعليم المجموعات:", o: ["Small group only", "Economic and positive attitude", "High cost", "Lack of sharing"], c: 1, ex: "تعتبر اقتصادية وتساعد في تغيير الاتجاهات." },
+    { q: "Communication is defined as:", ar: "التواصل هو:", o: ["Motivation", "Two way process between sender and receiver", "Ethics", "Learning"], c: 1, ex: "عملية متبادلة بين طرفين." },
+    { q: "Which of the following is characteristic of good communicator channel?", ar: "من صفات قناة التواصل الجيدة:", o: ["Appropriate", "Affordable", "Appealing", "All the above"], c: 3, ex: "يجب أن تكون مناسبة وجذابة وميسورة." },
+    { q: "Receiver is defined as:", ar: "المستقبل هو:", o: ["Sender", "The person to whom message is directed", "Channel", "Message"], c: 1, ex: "هو الشخص المستهدف بالرسالة." },
+    { q: "Feedback is:", ar: "التغذية الراجعة هي:", o: ["Sending", "Communication", "The final stage/reply", "Receiving"], c: 2, ex: "هي المرحلة النهائية التي تؤكد الفهم." },
+    { q: "Barriers of communication include:", ar: "عوائق التواصل تشمل:", o: ["Lack of interest", "Good language", "Anxiety", "1 and 3"], c: 3, ex: "نقص الاهتمام والقلق يعيقان التواصل." },
+    { q: "Teaching is defined as:", ar: "التدريس هو:", o: ["Interaction to bring changes in behavior", "Interaction with clients only", "Interaction between groups", "None"], c: 0, ex: "تفاعل يهدف لتعديل سلوك المتعلم." },
+    { q: "Rules of motivation include:", ar: "قواعد التحفيز تشمل:", o: ["Do not finish start", "Avoid socializing", "Take risk and set major goals", "None"], c: 2, ex: "وضع أهداف كبيرة والمخاطرة من أسس التحفيز." },
+    { q: "Upward communication is:", ar: "التواصل الصاعد هو:", o: ["From junior to senior", "From senior to junior", "Between students", "Directive"], c: 0, ex: "من الموظف إلى المدير." },
+    { q: "Downward communication is:", ar: "التواصل التنازلي هو:", o: ["From senior to junior", "Directive", "Give orders", "All the above"], c: 3, ex: "يشمل التوجيهات والأوامر من الأعلى للأدنى." },
+    { q: "Lateral communication is:", ar: "التواصل الأفقي هو:", o: ["Between colleagues", "At same level", "Share info to save time", "All the above"], c: 3, ex: "يتم بين الزملاء في نفس المستوى." },
+    { q: "Health educator role includes:", ar: "دور المثقف الصحي:", o: ["Planning programs", "Marketing", "Implementing", "All the above"], c: 3, ex: "يشمل التخطيط والتنفيذ والتسويق الصحي." },
+    { q: "Physical atmosphere should have:", ar: "البيئة التعليمية يجب أن توفر:", o: ["Uncomfortable setting", "Good ventilation and light", "Bad light", "Noise"], c: 1, ex: "التهوية والإضاءة الجيدة أساس التعلم." },
+    { q: "Educational objectives should be:", ar: "الأهداف التعليمية يجب أن تكون:", o: ["Relevant", "Observable", "Measurable", "All the above"], c: 3, ex: "يجب أن تكون قابلة للقياس والملاحظة." },
+    { q: "Motivation factors include:", ar: "عوامل التحفيز تشمل:", o: ["Teacher", "Learner", "Environment", "All the above"], c: 3, ex: "المعلم والمتعلم والبيئة كلهم مؤثرون." },
+    { q: "Health education starts from:", ar: "التثقيف الصحي يبدأ من:", o: ["Complex to simple", "Simple to complex", "Any point", "Difficult point"], c: 1, ex: "يجب التدرج من السهل إلى الصعب." },
+    { q: "Prenatal care education is considered:", ar: "تعليم رعاية ما قبل الولادة يعتبر:", o: ["Small group", "Medium sized group", "Large group", "Individual"], c: 1, ex: "يعتبر من المجموعات المتوسطة." },
+    { q: "Mass approach includes:", ar: "وسائل الجمهور تشمل:", o: ["Television", "Radio", "Mass media", "All the above"], c: 3, ex: "كل وسائل الإعلام العامة." },
+    { q: "Which of the following is the sender barrier?", ar: "أي مما يلي من عوائق المرسل؟", o: ["Lack of interest", "Noise", "Bad lighting", "Complex message"], c: 0, ex: "اهتمام المرسل ضروري جداً لنجاح التواصل." },
+    { q: "Communication is important for:", ar: "التواصل مهم لـ:", o: ["Establishing relations", "Learning", "Professional success", "All the above"], c: 3, ex: "التواصل يدخل في كل جوانب الحياة المهنية والاجتماعية." },
+    { q: "Nonverbal signals include:", ar: "الإشارات غير اللفظية تشمل:", o: ["Facial expressions", "Gestures", "Body posture", "All the above"], c: 3, ex: "لغة الجسد تشمل تعبيرات الوجه والوضعيات." },
+    { q: "Effective listening involves:", ar: "الاستماع الفعال يتطلب:", o: ["Interrupting", "Ignoring", "Paying attention and feedback", "Looking away"], c: 2, ex: "الانتباه والرد المناسب هو جوهر الاستماع الفعال." },
+    { q: "Barriers to effective listening:", ar: "عوائق الاستماع الفعال:", o: ["Prejudice", "Distraction", "Language difference", "All the above"], c: 3, ex: "التحيز والتشتت واختلاف اللغة كلها تعيق الاستماع." },
+    { q: "Horizontal communication occurs between:", ar: "التواصل الأفقي يحدث بين:", o: ["Manager and employee", "Different departments at same level", "Teacher and student", "None"], c: 1, ex: "يحدث بين الأقسام المختلفة في نفس المستوى الوظيفي." },
+    { q: "Vertical communication can be:", ar: "التواصل الرأسي يمكن أن يكون:", o: ["Upward", "Downward", "Both 1 and 2", "None"], c: 2, ex: "يشمل التواصل من أعلى لأسفل ومن أسفل لأعلى." },
+    { q: "A 'message' in communication is:", ar: "الرسالة في التواصل هي:", o: ["The person sending", "The person receiving", "The information transmitted", "The channel"], c: 2, ex: "الرسالة هي جوهر المعلومات المنقولة." },
+    { q: "One-way communication example:", ar: "مثال على التواصل ذو الاتجاه الواحد:", o: ["Discussion", "Radio broadcast", "Interview", "Meeting"], c: 1, ex: "الراديو يرسل فقط ولا يستقبل رداً فورياً." },
+    { q: "Two-way communication benefit:", ar: "فائدة التواصل ذو الاتجاهين:", o: ["Saves time", "Clarifies doubt", "No feedback", "Unreliable"], c: 1, ex: "يسمح بتوضيح الشكوك والحصول على ردود فعل." },
+    { q: "The medium of communication is:", ar: "وسيلة التواصل هي:", o: ["Sender", "Message", "Channel", "Receiver"], c: 2, ex: "القناة (Channel) هي الوسيط الذي تمر خلاله الرسالة." },
+    { q: "Body language is also known as:", ar: "لغة الجسد تعرف أيضاً بـ:", o: ["Verbal", "Kinesics", "Written", "Formal"], c: 1, ex: "Kinesics هو المصطلح العلمي لدراسة لغة الجسد." },
+    { q: "Formal communication follows:", ar: "التواصل الرسمي يتبع:", o: ["Grapevine", "Official chain of command", "Rumors", "None"], c: 1, ex: "يتبع التسلسل الإداري الرسمي." },
+    { q: "Informal communication is often called:", ar: "التواصل غير الرسمي يسمى غالباً:", o: ["Lateral", "Downward", "Grapevine", "Upward"], c: 2, ex: "Grapevine هو مصطلح يشير للتواصل غير الرسمي بين الموظفين." },
+    { q: "Communication noise can be:", ar: "ضوضاء التواصل يمكن أن تكون:", o: ["Physical", "Psychological", "Semantic", "All the above"], c: 3, ex: "الضوضاء قد تكون صوتية أو نفسية أو بسبب معاني الكلمات." },
+    { q: "Semantic barrier means:", ar: "العائق اللغوي (Semantic) يعني:", o: ["Loud noise", "Mistake in message coding", "Language/meaning problems", "Bad signal"], c: 2, ex: "يتعلق بسوء فهم معاني الكلمات والمصطلحات." },
+    { q: "Empathy in communication is:", ar: "التعاطف في التواصل هو:", o: ["Feeling sorry", "Understanding others' perspective", "Ignoring feelings", "Talking too much"], c: 1, ex: "القدرة على فهم وجهة نظر ومشاعر الآخرين." },
+    { q: "Health education aims to change:", ar: "التثقيف الصحي يهدف لتغيير:", o: ["Knowledge", "Attitude", "Practice", "All the above"], c: 3, ex: "يهدف لتغيير المعرفة والاتجاهات والسلوكيات (KAP)." },
+    { q: "Visual aids include:", ar: "الوسائل البصرية تشمل:", o: ["Posters", "Slides", "Charts", "All the above"], c: 3, ex: "كل ما يساعد في إيصال المعلومة بصرياً." },
+    { q: "Audio-visual aids example:", ar: "مثال على الوسائل السمعية البصرية:", o: ["Radio", "Blackboard", "Video/Movie", "Tape recorder"], c: 2, ex: "الفيديو يجمع بين الصوت والصورة." },
+    { q: "Individual approach in health education:", ar: "الأسلوب الفردي في التثقيف الصحي:", o: ["Lecture", "Workshop", "Interview/Counseling", "Radio"], c: 2, ex: "المقابلة الشخصية أو المشورة هي أسلوب فردي." },
+    { q: "Workshop is an example of:", ar: "ورشة العمل هي مثال على:", o: ["Individual approach", "Group approach", "Mass approach", "None"], c: 1, ex: "تعتبر من أساليب تعليم المجموعات." },
+    { q: "Newspapers are part of:", ar: "الصحف جزء من:", o: ["Mass approach", "Group approach", "Individual approach", "Direct contact"], c: 0, ex: "تصل لجمهور واسع جداً (Mass)." },
+    { q: "A good educational objective should be 'SMART', 'S' stands for:", ar: "الهدف التعليمي الجيد يجب أن يكون SMART، حرف S يرمز لـ:", o: ["Simple", "Specific", "Smart", "Social"], c: 1, ex: "يجب أن يكون الهدف محدداً (Specific)." },
+    { q: "Feedback helps the sender to:", ar: "التغذية الراجعة تساعد المرسل على:", o: ["Stop communicating", "Check understanding", "Ignore the receiver", "None"], c: 1, ex: "تساعده في التأكد من وصول الرسالة كما أراد." },
+    { q: "Psychological barrier example:", ar: "مثال على العائق النفسي:", o: ["Deafness", "Fear/Anxiety", "Loud noise", "Blurry text"], c: 1, ex: "الخوف والقلق عوائق نفسية داخلية." },
+    { q: "Physical barrier example:", ar: "مثال على العائق المادي:", o: ["Prejudice", "Noise/Distance", "Language", "Emotions"], c: 1, ex: "المسافة والضجيج عوائق مادية محيطة." },
+    { q: "Proxemics is the study of:", ar: "Proxemics هو علم دراسة:", o: ["Eye contact", "Body movement", "Personal space/distance", "Voice pitch"], c: 2, ex: "يدرس المساحات والمسافات بين الناس أثناء التواصل." },
+    { q: "Paralinguistics includes:", ar: "Paralinguistics تشمل:", o: ["Words used", "Tone, pitch, and speed of voice", "Written letters", "Signs"], c: 1, ex: "تتعلق بنبرة الصوت وسرعته وليس الكلمات نفسها." },
+    { q: "Written communication advantage:", ar: "ميزة التواصل الكتابي:", o: ["Fastest", "Immediate feedback", "Permanent record", "Non-formal"], c: 2, ex: "يوفر سجلاً دائماً يمكن الرجوع إليه." },
+    { q: "Written communication disadvantage:", ar: "عيب التواصل الكتابي:", o: ["Unreliable", "Takes time and delayed feedback", "Cannot be saved", "None"], c: 1, ex: "يستغرق وقتاً ولا تظهر فيه لغة الجسد." },
+    { q: "Eye contact in communication shows:", ar: "التواصل البصري يظهر:", o: ["Aggression", "Interest and confidence", "Fear", "Boredom"], c: 1, ex: "يظهر الاهتمام والثقة بالنفس." },
+    { q: "Closed questions usually start with:", ar: "الأسئلة المغلقة تبدأ عادة بـ:", o: ["What", "Why", "How", "Do/Is/Are"], c: 3, ex: "تكون إجابتها قصيرة (نعم أو لا)." },
+    { q: "Open questions allow for:", ar: "الأسئلة المفتوحة تسمح بـ:", o: ["Yes/No answer", "Detailed explanation", "No answer", "One word answer"], c: 1, ex: "تعطي فرصة للمستقبل للتحدث بالتفصيل." },
+    { q: "Active listening 'REPORTS' technique, 'R' stands for:", ar: "في تقنية الاستماع الفعال، حرف R يرمز لـ:", o: ["Run", "Receive", "Repeat", "Respond"], c: 3, ex: "Respond (الرد) جزء من عملية التفاعل السمعي." },
+    { q: "Internal motivation example:", ar: "مثال على التحفيز الداخلي:", o: ["Money", "Praise", "Sense of achievement", "Promotion"], c: 2, ex: "الشعور بالإنجاز ينبع من الداخل." },
+    { q: "External motivation example:", ar: "مثال على التحفيز الخارجي:", o: ["Self-satisfaction", "Interest", "Salary bonus", "Curiosity"], c: 2, ex: "المكافآت المالية محفزات خارجية." },
+    { q: "Hierarchy of needs was proposed by:", ar: "هرم الاحتياجات تم اقتراحه بواسطة:", o: ["Maslow", "Pavlov", "Skinner", "Freud"], c: 0, ex: "إبراهام ماسلو هو صاحب هرم الاحتياجات." },
+    { q: "First level in Maslow's hierarchy:", ar: "المستوى الأول في هرم ماسلو:", o: ["Safety", "Social", "Physiological", "Self-actualization"], c: 2, ex: "الاحتياجات الفسيولوجية (أكل، شرب) هي القاعدة." },
+    { q: "Highest level in Maslow's hierarchy:", ar: "أعلى مستوى في هرم ماسلو:", o: ["Safety", "Social", "Self-actualization", "Esteem"], c: 2, ex: "تحقيق الذات هو قمة الهرم." },
+    { q: "Safety needs include:", ar: "احتياجات الأمان تشمل:", o: ["Food", "Protection from harm", "Friendship", "Respect"], c: 1, ex: "الحماية من المخاطر والتهديدات." },
+    { q: "Counseling definition:", ar: "تعريف المشورة (Counseling):", o: ["Giving orders", "Helping person solve own problems", "Teaching facts only", "Punishment"], c: 1, ex: "مساعدة الشخص على فهم وحل مشكلاته بنفسه." },
+    { q: "Empathy vs Sympathy:", ar: "التعاطف (Empathy) مقابل الشفقة (Sympathy):", o: ["Sympathy is better", "Empathy is feeling with, Sympathy is feeling for", "Both same", "None"], c: 1, ex: "Empathy تعني أن تضع نفسك مكان الآخر وتفهم شعوره." },
+    { q: "Teacher as a 'facilitator' means:", ar: "المعلم كـ 'ميسر' يعني:", o: ["Does all work", "Makes learning easier for students", "Does nothing", "Lectures only"], c: 1, ex: "يسهل العملية التعليمية ويحفز الطلاب." },
+    { q: "Barriers related to channel:", ar: "عوائق متعلقة بقناة التواصل:", o: ["Language", "Poor signal/Noisy phone", "Anxiety", "Anger"], c: 1, ex: "تشمل المشاكل التقنية في وسيلة الاتصال." },
+    { q: "Health education principle: 'Participation' means:", ar: "مبدأ 'المشاركة' في التثقيف الصحي يعني:", o: ["Only teacher speaks", "Active involvement of learners", "Listening only", "Ignoring learners"], c: 1, ex: "إشراك المتعلمين يجعل التعلم أكثر فعالية." },
+    { q: "Posters should be:", ar: "الملصقات (Posters) يجب أن تكون:", o: ["Crowded with text", "Simple and attractive", "Dark", "No pictures"], c: 1, ex: "يجب أن تكون بسيطة، جذابة، وواضحة الرسالة." },
+    { q: "Flashcards are best used for:", ar: "البطاقات التعليمية (Flashcards) تستخدم لـ:", o: ["Large crowds", "Small groups", "Individual only", "Radio"], c: 1, ex: "تستخدم لشرح تسلسل معين لمجموعات صغيرة." },
+    { q: "Blackboard is a:", ar: "السبورة تعتبر:", o: ["Visual aid", "Audio aid", "Mass media", "None"], c: 0, ex: "وسيلة بصرية تعليمية تقليدية وفعالة." },
+    { q: "One of the 7 Cs of communication is:", ar: "واحد من الـ 7 Cs في التواصل هو:", o: ["Complexity", "Clarity", "Confusion", "Carelessness"], c: 1, ex: "Clarity (الوضوح) من أهم قواعد التواصل." },
+    { q: "Which of the following is a barrier related to the receiver?", ar: "أي مما يلي عائق متعلق بالمستقبل؟", o: ["Unclear voice", "Selective perception", "Technical noise", "Complex jargon"], c: 1, ex: "الإدراك الانتقائي يعني أن يسمع المستقبل ما يريد فقط." },
+    { q: "The goal of health education is to achieve:", ar: "الهدف من التثقيف الصحي هو تحقيق:", o: ["Behavior change", "Increased fear", "Selling medicine", "Compulsion"], c: 0, ex: "الهدف الأساسي هو تعديل السلوكيات الصحية." },
+    { q: "Interpersonal communication is:", ar: "التواصل الشخصي هو:", o: ["Mass communication", "Face to face between two people", "Self-talk", "Watching TV"], c: 1, ex: "هو التواصل المباشر وجهاً لوجه بين شخصين." },
+    { q: "Intrapersonal communication is:", ar: "التواصل الذاتي هو:", o: ["Talk to others", "Talking to oneself", "Radio", "Lecture"], c: 1, ex: "هو الحوار الداخلي الذي يدور في عقل الشخص مع نفسه." },
+    { q: "A communicator should be:", ar: "يجب أن يكون المتواصل:", o: ["Knowledgeable", "Audible", "Credible", "All the above"], c: 3, ex: "يجب أن يمتلك المعرفة، الصوت الواضح، والمصداقية." },
+    { q: "The 'S' in SMART objectives stands for:", ar: "حرف S في أهداف SMART يرمز لـ:", o: ["Simple", "Social", "Specific", "Smart"], c: 2, ex: "يجب أن يكون الهدف محدداً (Specific)." },
+    { q: "The 'M' in SMART objectives stands for:", ar: "حرف M في أهداف SMART يرمز لـ:", o: ["Motivational", "Measurable", "Modern", "Mental"], c: 1, ex: "يجب أن يكون الهدف قابلاً للقياس (Measurable)." },
+    { q: "The 'A' in SMART objectives stands for:", ar: "حرف A في أهداف SMART يرمز لـ:", o: ["Attainable", "Active", "Average", "Absolute"], c: 0, ex: "يجب أن يكون الهدف قابلاً للتحقيق (Attainable)." },
+    { q: "The 'R' in SMART objectives stands for:", ar: "حرف R في أهداف SMART يرمز لـ:", o: ["Right", "Relevant", "Rapid", "Rare"], c: 1, ex: "يجب أن يكون الهدف ذا صلة بالواقع (Relevant)." },
+    { q: "The 'T' in SMART objectives stands for:", ar: "حرف T في أهداف SMART يرمز لـ:", o: ["Talkative", "Time-bound", "Technical", "True"], c: 1, ex: "يجب أن يكون الهدف محدداً بإطار زمني (Time-bound)." },
+    { q: "Direct feedback is found in:", ar: "التغذية الراجعة المباشرة توجد في:", o: ["Television", "Newspapers", "Face-to-face communication", "Radio"], c: 2, ex: "التواصل المباشر يسمح برد فعل فوري." },
+    { q: "The sender 'Encodes' the message, this means:", ar: "المرسل يقوم بتشفير الرسالة (Encoding)، وهذا يعني:", o: ["Translating ideas into symbols/words", "Interpreting symbols", "Blocking the message", "Receiving feedback"], c: 0, ex: "تحويل الأفكار إلى كلمات أو رموز مفهومة." },
+    { q: "The receiver 'Decodes' the message, this means:", ar: "المستقبل يقوم بفك التشفير (Decoding)، وهذا يعني:", o: ["Sending symbols", "Interpreting symbols into meaning", "Ignoring message", "Changing channel"], c: 1, ex: "تفسير الرموز أو الكلمات إلى معانٍ مفهومة." },
+    { q: "A lecture is best for:", ar: "المحاضرة هي الأنسب لـ:", o: ["Changing skills", "Sharing facts with large groups", "Individual counseling", "Private talk"], c: 1, ex: "المحاضرات تنقل المعلومات والحقائق لعدد كبير." },
+    { q: "Group discussion is best for:", ar: "المناقشة الجماعية هي الأفضل لـ:", o: ["Teaching math", "Changing attitudes and opinions", "Silent reading", "None"], c: 1, ex: "المناقشة تساعد في تغيير القناعات والآراء." },
+    { q: "Role play in health education is for:", ar: "لعب الأدوار (Role play) يهدف إلى:", o: ["Entertainment only", "Learning skills and empathy", "Boring learners", "Testing only"], c: 1, ex: "يساعد على تعلم المهارات والتعاطف مع الآخرين." },
+    { q: "Health education should be based on:", ar: "يجب أن يعتمد التثقيف الصحي على:", o: ["Needs of the people", "Needs of the doctor", "Wishes of the government", "Random topics"], c: 0, ex: "يجب أن يلبي احتياجات الناس والمجتمع الحقيقية." },
+    { q: "Active listening requires:", ar: "الاستماع الفعال يتطلب:", o: ["Thinking of reply while others talk", "Understanding the message and feeling", "Multitasking", "Looking at phone"], c: 1, ex: "يتطلب فهم المعنى والمشاعر المصاحبة." },
+    { q: "Which of these is a non-verbal cue?", ar: "أي من هذه إشارة غير لفظية؟", o: ["Email", "Silence", "A shout", "A text message"], c: 1, ex: "الصمت (Silence) يعتبر رسالة غير لفظية قوية." },
+    { q: "Public communication occurs in:", ar: "التواصل العام يحدث في:", o: ["Family dinner", "Speeches and rallies", "Between two friends", "Self-reflection"], c: 1, ex: "مثل الخطب والمؤتمرات الجماهيرية." },
+    { q: "To improve communication, we should use:", ar: "لتحسين التواصل، يجب استخدام:", o: ["Jargon", "Simple language", "Complex sentences", "One-way channel"], c: 1, ex: "اللغة البسيطة تضمن وصول الرسالة للجميع." },
+    { q: "Non-verbal communication is often:", ar: "التواصل غير اللفظي غالباً ما يكون:", o: ["Conscious", "Unconscious and automatic", "Planned", "Written"], c: 1, ex: "غالباً ما يصدر تلقائياً ويعبر عن المشاعر الحقيقية." },
+    { q: "Posters should be placed at:", ar: "يجب وضع الملصقات في:", o: ["Hidden places", "Eye level in busy areas", "The ceiling", "Behind doors"], c: 1, ex: "في مستوى العين وفي أماكن تجمع الناس." },
+    { q: "The person who starts communication is:", ar: "الشخص الذي يبدأ التواصل هو:", o: ["Receiver", "Channel", "Sender", "Feedbacker"], c: 2, ex: "المرسل (Sender) هو مصدر الرسالة." },
+    { q: "One of the following is NOT a level of communication:", ar: "واحد مما يلي ليس من مستويات التواصل:", o: ["Interpersonal", "Mass", "Emotional", "Intrapersonal"], c: 2, ex: "العاطفي (Emotional) ليس مستوى إدارياً أو نوعاً تنظيمياً للتواصل." },
+    
+    // --- TRUE OR FALSE QUESTIONS ---
+    { q: "Motivation is an internal force that initiates behavior.", ar: "التحفيز قوة داخلية تبدأ السلوك.", o: ["True", "False"], c: 0, ex: "صحيح، التحفيز ينبع من الداخل." },
+    { q: "Verbal communication involves only written words.", ar: "التواصل اللفظي يشمل الكلمات المكتوبة فقط.", o: ["True", "False"], c: 1, ex: "خطأ، يشمل المنطوق والمكتوب." },
+    { q: "Non-verbal communication is more reliable than verbal.", ar: "التواصل غير اللفظي أكثر موثوقية من اللفظي.", o: ["True", "False"], c: 0, ex: "صحيح، لغة الجسد غالباً لا تكذب." },
+    { q: "Empathy means feeling exactly like the other person.", ar: "التعاطف يعني الشعور تماماً مثل الشخص الآخر.", o: ["True", "False"], c: 0, ex: "صحيح، هو القدرة على مشاركة المشاعر." },
+    { q: "Health education is a one-way process.", ar: "التثقيف الصحي عملية ذات اتجاه واحد.", o: ["True", "False"], c: 1, ex: "خطأ، هي عملية تفاعلية ذات اتجاهين." },
+    { q: "Upward communication goes from employees to managers.", ar: "التواصل الصاعد ينتقل من الموظفين للمديرين.", o: ["True", "False"], c: 0, ex: "صحيح، لنقل التقارير والمقترحات." },
+    { q: "Anxiety can improve the clarity of communication.", ar: "القلق يمكن أن يحسن وضوح التواصل.", o: ["True", "False"], c: 1, ex: "خطأ، القلق هو عائق نفسي يشتت الرسالة." },
+    { q: "Horizontal communication occurs between equal levels.", ar: "التواصل الأفقي يحدث بين المستويات المتساوية.", o: ["True", "False"], c: 0, ex: "صحيح، مثل التواصل بين الزملاء." },
+    { q: "Noise is any interference in the communication process.", ar: "الضوضاء هي أي تداخل في عملية التواصل.", o: ["True", "False"], c: 0, ex: "صحيح، سواء كانت ضوضاء مادية أو معنوية." },
+    { q: "Passive listening is better than active listening.", ar: "الاستماع السلبي أفضل من الاستماع الفعال.", o: ["True", "False"], c: 1, ex: "خطأ، الاستماع الفعال ضروري للفهم والرد." },
+    { q: "Feedback allows the sender to correct the message.", ar: "التغذية الراجعة تسمح للمرسل بتصحيح الرسالة.", o: ["True", "False"], c: 0, ex: "صحيح، إذا تبين سوء الفهم." },
+    { q: "A lecture is an individual approach to education.", ar: "المحاضرة هي أسلوب فردي في التعليم.", o: ["True", "False"], c: 1, ex: "خطأ، هي أسلوب جماعي (Group approach)." },
+    { q: "Selective perception is a barrier for the receiver.", ar: "الإدراك الانتقائي عائق للمستقبل.", o: ["True", "False"], c: 0, ex: "صحيح، يجعله يفسر الرسالة حسب هواه." },
+    { q: "Closed questions encourage detailed answers.", ar: "الأسئلة المغلقة تشجع على الإجابات التفصيلية.", o: ["True", "False"], c: 1, ex: "خطأ، الأسئلة المفتوحة هي التي تفعل ذلك." },
+    { q: "The teacher's role is to facilitate learning.", ar: "دور المعلم هو تسهيل عملية التعلم.", o: ["True", "False"], c: 0, ex: "صحيح، المعلم هو ميسر وليس ملقناً فقط." },
+    { q: "Posters should be complex to show professionalism.", ar: "يجب أن تكون الملصقات معقدة لإظهار الاحترافية.", o: ["True", "False"], c: 1, ex: "خطأ، البساطة هي مفتاح نجاح الملصق." },
+    { q: "Communication can solve all human problems.", ar: "التواصل يمكنه حل كل المشاكل البشرية.", o: ["True", "False"], c: 0, ex: "صحيح، معظم المشاكل ناتجة عن سوء تفاهم." },
+    { q: "Self-actualization is the lowest need in Maslow's pyramid.", ar: "تحقيق الذات هو أدنى حاجة في هرم ماسلو.", o: ["True", "False"], c: 1, ex: "خطأ، هو قمة الهرم (أعلى حاجة)." },
+    { q: "Jargon is simple language everyone understands.", ar: "Jargon هي لغة بسيطة يفهمها الجميع.", o: ["True", "False"], c: 1, ex: "خطأ، هي مصطلحات فنية معقدة تعتبر عائقاً." },
+    { q: "Face-to-face communication is the most effective.", ar: "التواصل وجهاً لوجه هو الأكثر فعالية.", o: ["True", "False"], c: 0, ex: "صحيح، لتوافر لغة الجسد والرد الفوري." },
+    { q: "Privacy is not important in health counseling.", ar: "الخصوصية مهمة في المشورة الصحية.", o: ["True", "False"], c: 1, ex: "خطأ، الخصوصية أساس بناء الثقة." },
+    { q: "The channel is the person who receives the message.", ar: "القناة هي الشخص الذي يستقبل الرسالة.", o: ["True", "False"], c: 1, ex: "خطأ، القناة هي الوسيط (مثل الهاتف أو الورق)." },
+    { q: "Motivation can increase worker productivity.", ar: "التحفيز يمكن أن يزيد إنتاجية العامل.", o: ["True", "False"], c: 0, ex: "صحيح، العامل المحفز ينجز أكثر." },
+    { q: "Eye contact is a form of verbal communication.", ar: "التواصل البصري شكل من أشكال التواصل اللفظي.", o: ["True", "False"], c: 1, ex: "خطأ، هو تواصل غير لفظي." },
+    { q: "A good message should be brief and clear.", ar: "الرسالة الجيدة يجب أن تكون مختصرة وواضحة.", o: ["True", "False"], c: 0, ex: "صحيح، لضمان عدم ضياع المعنى." },
+    { q: "Health education should be based on scientific facts.", ar: "يجب أن يعتمد التثقيف الصحي على الحقائق العلمية.", o: ["True", "False"], c: 0, ex: "صحيح، لضمان دقة المعلومات وسلامة الناس." },
+    { q: "Group approach is very expensive compared to individual approach.", ar: "أسلوب المجموعات مكلف جداً مقارنة بالأسلوب الفردي.", o: ["True", "False"], c: 1, ex: "خطأ، أسلوب المجموعات يوفر الوقت والجهد والمال (Economic)." },
+    { q: "A teacher should be a good listener.", ar: "يجب أن يكون المعلم مستمعاً جيداً.", o: ["True", "False"], c: 0, ex: "صحيح، ليفهم احتياجات الطلاب وصعوباتهم." },
+    { q: "Visual aids can replace the teacher completely.", ar: "الوسائل البصرية يمكن أن تحل محل المعلم تماماً.", o: ["True", "False"], c: 1, ex: "خطأ، هي مجرد أدوات مساعدة للمعلم وليست بديلاً عنه." },
+    { q: "Feedback helps to reduce misunderstanding.", ar: "التغذية الراجعة تساعد في تقليل سوء الفهم.", o: ["True", "False"], c: 0, ex: "صحيح، لأنها توضح ما إذا كانت الرسالة وصلت بشكل صحيح." },
+    { q: "Credibility of the sender is important for persuasion.", ar: "مصداقية المرسل مهمة جداً للإقناع.", o: ["True", "False"], c: 0, ex: "صحيح، الناس يقتنعون بمن يثقون في علمه وأمانته." },
+    { q: "Written communication provides a permanent record.", ar: "التواصل الكتابي يوفر سجلاً دائماً.", o: ["True", "False"], c: 0, ex: "صحيح، يمكن الرجوع إليه في أي وقت كوثيقة." },
+    { q: "Non-verbal cues can contradict verbal messages.", ar: "الإشارات غير اللفظية يمكن أن تناقض الرسائل اللفظية.", o: ["True", "False"], c: 0, ex: "صحيح، قد يقول الشخص 'أنا بخير' وهو يبكي." },
+    { q: "A good channel should be appropriate for the message.", ar: "يجب أن تكون القناة مناسبة لنوع الرسالة.", o: ["True", "False"], c: 0, ex: "صحيح، فالمواضيع الحساسة تحتاج تواصل مباشر وليس رسائل نصية." },
+    { q: "Participation of people is not necessary in health programs.", ar: "مشاركة الناس ليست ضرورية في البرامج الصحية.", o: ["True", "False"], c: 1, ex: "خطأ، المشاركة المجتمعية هي أساس نجاح أي برنامج صحي." },
+    { q: "Health education is only for sick people.", ar: "التثقيف الصحي للمرضى فقط.", o: ["True", "False"], c: 1, ex: "خطأ، هو للأصحاء للوقاية وللمرضى للعلاج." },
+    { q: "Teaching involves changing knowledge, attitudes, and skills.", ar: "التدريس يشمل تغيير المعرفة والاتجاهات والمهارات.", o: ["True", "False"], c: 0, ex: "صحيح، هو تغيير شامل في السلوك." },
+    { q: "Motivation is not related to learning performance.", ar: "التحفيز ليس له علاقة بأداء التعلم.", o: ["True", "False"], c: 1, ex: "خطأ، كلما زاد التحفيز تحسن الأداء التعليمي." },
+    { q: "Grapevine communication is always accurate.", ar: "تواصل 'العنب' (غير الرسمي) دائماً دقيق.", o: ["True", "False"], c: 1, ex: "خطأ، غالباً ما يحمل شائعات ومعلومات غير دقيقة." },
+    { q: "Formal communication follows the hierarchy of organization.", ar: "التواصل الرسمي يتبع الهيكل التنظيمي للمؤسسة.", o: ["True", "False"], c: 0, ex: "صحيح، يمر عبر القنوات الرسمية المعتمدة." },
+    { q: "Silence can be an effective communication tool.", ar: "الصمت قد يكون أداة تواصل فعالة.", o: ["True", "False"], c: 0, ex: "صحيح، يعطي فرصة للتفكير أو يعبر عن الرفض/القبول." },
+    { q: "A messy environment is a physical barrier to communication.", ar: "البيئة الفوضوية تعتبر عائقاً مادياً للتواصل.", o: ["True", "False"], c: 0, ex: "صحيح، تشتت الانتباه وتعيق التركيز." },
+    { q: "Direct questioning is a part of verbal communication.", ar: "الأسئلة المباشرة جزء من التواصل اللفظي.", o: ["True", "False"], c: 0, ex: "صحيح، تستخدم للحصول على معلومات محددة." },
+    { q: "Active listening means only being quiet.", ar: "الاستماع الفعال يعني فقط أن تظل صامتاً.", o: ["True", "False"], c: 1, ex: "خطأ، يتطلب التفاعل وإظهار الانتباه بالجسد والرد." },
+    { q: "A communicator must have good professional knowledge.", ar: "يجب أن يتمتع المتواصل بمعرفة مهنية جيدة.", o: ["True", "False"], c: 0, ex: "صحيح، ليكون قادراً على الإجابة على الاستفسارات بثقة." },
+    { q: "Semantic barriers relate to the meaning of words.", ar: "العوائق الدلالية (Semantic) تتعلق بمعاني الكلمات.", o: ["True", "False"], c: 0, ex: "صحيح، مثل استخدام مصطلحات تقنية مع أشخاص عاديين." },
+    { q: "Self-actualization is a basic physiological need.", ar: "تحقيق الذات من الاحتياجات الفسيولوجية الأساسية.", o: ["True", "False"], c: 1, ex: "خطأ، هو أعلى مستوى في الاحتياجات النفسية والروحية." },
+    { q: "Internal force starts motivation.", ar: "القوة الداخلية هي التي تبدأ التحفيز.", o: ["True", "False"], c: 0, ex: "صحيح، ينبع التحفيز الحقيقي من داخل الإنسان." },
+    { q: "Communication is only possible through words.", ar: "التواصل ممكن فقط من خلال الكلمات.", o: ["True", "False"], c: 1, ex: "خطأ، هناك تواصل غير لفظي، بصري، وجسدي." },
+    { q: "Empathy builds trust between healthcare worker and client.", ar: "التعاطف يبني الثقة بين العامل الصحي والمريض.", o: ["True", "False"], c: 0, ex: "صحيح، الشعور بالاهتمام يجعل المريض أكثر تعاوناً." },
+    { q: "A lecture is an effective way to teach a manual skill.", ar: "المحاضرة وسيلة فعالة لتعليم مهارة يدوية.", o: ["True", "False"], c: 1, ex: "خطأ، المهارات اليدوية تحتاج 'بيان عملي' (Demonstration)." },
+    { q: "Radio is a mass communication medium.", ar: "الراديو هو وسيلة تواصل جماهيرية.", o: ["True", "False"], c: 0, ex: "صحيح، يصل لآلاف الناس في وقت واحد." },
+    { q: "Feedback can be non-verbal.", ar: "التغذية الراجعة يمكن أن تكون غير لفظية.", o: ["True", "False"], c: 0, ex: "صحيح، مثل إيماءة الرأس بالموافقة." },
+    { q: "Encoding is done by the receiver.", ar: "التشفير (Encoding) يقوم به المستقبل.", o: ["True", "False"], c: 1, ex: "خطأ، التشفير مهمة المرسل (Sender)." },
+    { q: "Decoding is the interpretation of the message.", ar: "فك التشفير (Decoding) هو تفسير الرسالة.", o: ["True", "False"], c: 0, ex: "صحيح، يقوم به المستقبل لفهم المعنى." },
+    { q: "Posters should be clear enough to be read from a distance.", ar: "الملصقات يجب أن تكون واضحة لدرجة قراءتها من مسافة.", o: ["True", "False"], c: 0, ex: "صحيح، هذا هو الغرض الأساسي منها." },
+    { q: "Motivation helps to increase productivity.", ar: "التحفيز يساعد في زيادة الإنتاجية.", o: ["True", "False"], c: 0, ex: "صحيح، الشخص المتحفز يعمل بجهد أكبر." },
+    { q: "Communication flows only downward in a team.", ar: "التواصل يتدفق فقط للأسفل داخل الفريق.", o: ["True", "False"], c: 1, ex: "خطأ، يجب أن يكون في جميع الاتجاهات لنجاح الفريق." },
+    { q: "Lateral communication saves time in information sharing.", ar: "التواصل الأفقي يوفر الوقت في مشاركة المعلومات.", o: ["True", "False"], c: 0, ex: "صحيح، لأنه يتم بين الزملاء مباشرة دون تعقيد إداري." },
+    { q: "Paralinguistics include voice pitch and tone.", ar: "الـ Paralinguistics تشمل درجة ونبرة الصوت.", o: ["True", "False"], c: 0, ex: "صحيح، هي مكملات الصوت التي توصل المشاعر." },
+    { q: "A planner is a role of a teacher.", ar: "المخطط هو أحد أدوار المعلم.", o: ["True", "False"], c: 0, ex: "صحيح، يجب على المعلم التخطيط للمادة والوقت." },
+    { q: "Health education does not help in making decisions.", ar: "التثقيف الصحي لا يساعد في اتخاذ القرارات.", o: ["True", "False"], c: 1, ex: "خطأ، هو يزود الناس بالوعي اللازم لاتخاذ قرارات صحية." },
+    { q: "One-way communication is faster than two-way.", ar: "التواصل ذو الاتجاه الواحد أسرع من ذو الاتجاهين.", o: ["True", "False"], c: 0, ex: "صحيح، لكنه أقل دقة لعدم وجود رد فعل." },
+    { q: "Effective communication is essential for human relations.", ar: "التواصل الفعال ضروري للعلاقات الإنسانية.", o: ["True", "False"], c: 0, ex: "صحيح، هو أساس بناء الروابط والتفاهم." },
+    { q: "Simple language is a barrier to communication.", ar: "اللغة البسيطة تعتبر عائقاً للتواصل.", o: ["True", "False"], c: 1, ex: "خطأ، اللغة البسيطة هي أداة لتسهيل التواصل." },
+    { q: "Physical noise can block a message.", ar: "الضوضاء المادية يمكن أن تمنع وصول الرسالة.", o: ["True", "False"], c: 0, ex: "صحيح، مثل صوت الماكينات أو الزحام." },
+    { q: "Interpersonal communication is face-to-face.", ar: "التواصل الشخصي يكون وجهاً لوجه.", o: ["True", "False"], c: 0, ex: "صحيح، وهو أقوى أنواع التواصل." },
+    { q: "The sender should encourage feedback.", ar: "يجب على المرسل تشجيع التغذية الراجعة.", o: ["True", "False"], c: 0, ex: "صحيح، لضمان نجاح عملية التواصل." },
+    { q: "Proxemics is the study of personal space.", ar: "الـ Proxemics هو دراسة المساحة الشخصية.", o: ["True", "False"], c: 0, ex: "صحيح، ومدى تأثير المسافة على التواصل." },
+    { q: "Cultural differences are not a barrier.", ar: "الاختلافات الثقافية ليست عائقاً.", o: ["True", "False"], c: 1, ex: "خطأ، اختلاف الثقافات قد يؤدي لسوء فهم كبير." },
+    { q: "Jargon is specialized language for a specific group.", ar: "الـ Jargon هي لغة متخصصة لمجموعة معينة.", o: ["True", "False"], c: 0, ex: "صحيح، مثل المصطلحات الطبية المعقدة." },
+    { q: "Body language represents a large part of the message.", ar: "لغة الجسد تمثل جزءاً كبيراً من الرسالة.", o: ["True", "False"], c: 0, ex: "صحيح، يقدرها البعض بأكثر من 55%." },
+    { q: "Health education can lead to voluntary behavior change.", ar: "التثقيف الصحي يمكن أن يؤدي لتغيير سلوكي طوعي.", o: ["True", "False"], c: 0, ex: "صحيح، هذا هو الهدف الأسمى له." },
+    { q: "Anger can improve a person's listening skills.", ar: "الغضب يمكن أن يحسن مهارات الاستماع لدى الشخص.", o: ["True", "False"], c: 1, ex: "خطأ، الغضب عائق نفسي يمنع التفكير والسمع السليم." },
+    { q: "A good objective must be time-bound.", ar: "يجب أن يكون الهدف الجيد مرتبطاً بزمن.", o: ["True", "False"], c: 0, ex: "صحيح، حرف T في SMART يرمز لذلك (Time-bound)." },
+    { q: "Effective communication is a two-way process.", ar: "التواصل الفعال عملية ذات اتجاهين.", o: ["True", "False"], c: 0, ex: "صحيح، لضمان التفاعل والفهم المشترك." },
+    { q: "Barriers can exist at any stage of communication.", ar: "العوائق يمكن أن توجد في أي مرحلة من مراحل التواصل.", o: ["True", "False"], c: 0, ex: "صحيح، سواء عند المرسل، القناة، أو المستقبل." },
+    { q: "Learning is more effective when people participate.", ar: "التعلم يكون أكثر فعالية عندما يشارك الناس.", o: ["True", "False"], c: 0, ex: "صحيح، الممارسة والمشاركة تثبت المعلومة." },
+    { q: "A good communicator chooses the right channel.", ar: "المتواصل الجيد يختار القناة الصحيحة.", o: ["True", "False"], c: 0, ex: "صحيح، لضمان وصول الرسالة بأفضل شكل." },
+    { q: "The end of communication is when the message is decoded.", ar: "نهاية التواصل تكون عندما يتم فك تشفير الرسالة.", o: ["True", "False"], c: 1, ex: "خطأ، التواصل ينتهي فعلياً بالحصول على التغذية الراجعة (Feedback)." }
 ];
 
-// سيقوم الكود تلقائياً بعرض الأسئلة وحساب النتائج
 function buildQuiz() {
     const container = document.getElementById("quiz-container");
     document.getElementById("totalQs").innerText = questions.length;
+    container.innerHTML = ""; // مسح المحتوى قبل البناء
+    
     questions.forEach((item, i) => {
         const card = document.createElement("div");
         card.className = "quiz-card";
@@ -66,6 +252,7 @@ function buildQuiz() {
             <div class="explanation-box" id="ex-box-${i}"><b>التفسير:</b> ${item.ex}</div>
         `;
         container.appendChild(card);
+        
         item.o.forEach((opt, j) => {
             const btn = document.createElement("button");
             btn.className = "option-btn";
@@ -73,8 +260,12 @@ function buildQuiz() {
             btn.onclick = () => {
                 const btns = card.querySelectorAll(".option-btn");
                 btns.forEach(b => b.disabled = true);
-                if(j === item.c) btn.classList.add("correct-opt");
-                else { btn.classList.add("wrong-opt"); btns[item.c].classList.add("correct-opt"); }
+                if(j === item.c) {
+                    btn.classList.add("correct-opt");
+                } else {
+                    btn.classList.add("wrong-opt");
+                    btns[item.c].classList.add("correct-opt");
+                }
                 card.querySelector(".explanation-box").style.display = "block";
                 document.getElementById("answeredCount").innerText = parseInt(document.getElementById("answeredCount").innerText) + 1;
             };
@@ -87,9 +278,12 @@ function searchQuestions() {
     let input = document.getElementById('searchInput').value.toLowerCase();
     let cards = document.getElementsByClassName('quiz-card');
     for (let i = 0; i < cards.length; i++) {
-        cards[i].style.display = cards[i].innerText.toLowerCase().includes(input) ? "block" : "none";
+        // البحث في النص الإنجليزي والعربي
+        let text = cards[i].innerText.toLowerCase();
+        cards[i].style.display = text.includes(input) ? "block" : "none";
     }
 }
+
 window.onload = buildQuiz;
 </script>
 </body>
